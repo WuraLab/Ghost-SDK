@@ -17,7 +17,7 @@ describe('GhostContentApi', function () {
 
         let returnError;
 
-        beforeEach(() => {
+        beforeEach(function () {
             returnError = false;
         });
 
@@ -294,6 +294,19 @@ describe('GhostContentApi', function () {
                         });
 
                         api.posts.read({id: 1}, {}, 'token');
+                    });
+
+                    it('errors correctly for an empty object', function (done) {
+                        const api = new GhostContentApi(config);
+
+                        api.posts.read()
+                            .then(() => {
+                                done('expected failure');
+                            })
+                            .catch((err) => {
+                                should.exist(err);
+                                done();
+                            });
                     });
                 });
             });
