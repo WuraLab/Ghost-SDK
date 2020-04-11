@@ -42,7 +42,7 @@ module.exports = function GhostAdminAPI(options) {
         }
     };
 
-    //copy all enumerable own properties from defaultConfig and options to an empty object and assign it to config. 
+    //copy all enumerable own properties from defaultConfig and options to an empty object and assign it to config.
     const config = Object.assign({}, defaultConfig, options);
 
     // new GhostAdminAPI({host: '...'}) is deprecated
@@ -94,7 +94,7 @@ module.exports = function GhostAdminAPI(options) {
         throw new Error('GhostAdminAPI Config Invalid: @tryghost/admin-api requires a "key" in following format {A}:{B}, where A is 24 hex characters and B is 64 hex characters');
     }
 
-    // resources currently supported 
+    // resources currently supported
     // stable and experimental resources
     const resources = [
         // @NOTE: stable
@@ -108,13 +108,10 @@ module.exports = function GhostAdminAPI(options) {
         'members'
     ];
 
-        
-/**
- * The api has 9 methods to for making api calls 
- *  
- */
-
-
+    /**
+     * The api has 9 methods to for making api calls
+     *
+     */
 
     //copy all enumerable own properties from each resource and options apiObject
     const api = resources.reduce((apiObject, resourceType) => {
@@ -210,7 +207,7 @@ module.exports = function GhostAdminAPI(options) {
             }
         });
     }, {});
- 
+
     // method to upload images
     api.images = {
         upload(data) {
@@ -294,7 +291,7 @@ module.exports = function GhostAdminAPI(options) {
         });
     }
 
-    // function makeResourceRequest 
+    // function makeResourceRequest
     function makeResourceRequest(resourceType, queryParams = {}, body = {}, method = 'GET', urlParams = {}) {
         // make the api request
         return makeApiRequest({
@@ -325,13 +322,13 @@ module.exports = function GhostAdminAPI(options) {
     function endpointFor(resource, { id, slug, email } = {}) {
         // destructure values from config
         const { ghostPath, version } = config;
-        // default endpoint 
+        // default endpoint
         let endpoint = `/${ghostPath}/api/${version}/admin/${resource}/`;
 
         // if id is supplied then endpoint points to the supplied id
         if (id) {
             endpoint = `${endpoint}${id}/`;
-            // if id is not supplied check if slug is supplied and point to the supplied slug
+            // if  id is not supplied check if slug is supplied and point to the supplied slug
         } else if (slug) {
             endpoint = `${endpoint}slug/${slug}/`;
             // if id and slug are not supplied check if email is supplied and point to the supplied email
