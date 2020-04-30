@@ -1,7 +1,7 @@
 {
   "name": "@tryghost/timezone-data",
-  "version": "0.2.19",
-  "repository": "https://github.com/TryGhost/Ghost-SDKs/tree/master/packages/timezone-data",
+  "version": "0.2.24",
+  "repository": "https://github.com/TryGhost/Ghost-SDK/tree/master/packages/timezone-data",
   "author": "Ghost Foundation",
   "license": "MIT",
   "main": "cjs/timezone-data.js",
@@ -30,15 +30,15 @@
     "access": "public"
   },
   "devDependencies": {
-    "@babel/core": "7.8.6",
-    "@babel/preset-env": "7.8.6",
-    "mocha": "6.2.0",
-    "rollup": "1.32.0",
-    "rollup-plugin-babel": "4.3.3",
+    "@babel/core": "7.9.0",
+    "@babel/preset-env": "7.9.5",
+    "mocha": "7.1.1",
+    "rollup": "2.7.2",
+    "rollup-plugin-babel": "4.4.0",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
-    "rollup-plugin-terser": "5.2.0",
+    "rollup-plugin-terser": "5.3.0",
     "should": "13.2.3",
-    "sinon": "7.4.1"
+    "sinon": "9.0.2"
   }
 }
