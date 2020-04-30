@@ -1,5 +1,4 @@
 import axios from 'axios';
-// const axios = require('axios');
 
 const supportedVersions = ['v2', 'v3', 'canary'];
 const name = '@tryghost/content-api';
