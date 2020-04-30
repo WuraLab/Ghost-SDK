@@ -226,9 +226,9 @@ module.exports = function GhostAdminAPI(options) {
 
     return api;
 
-        //this function is used to upload  a resource to an endpoint
-        //the resource type can be a post, page, an image, a theme,
-        //the function is taking in three parameters, which are the resourcetype(the type of what you want to upload), data(the payload i.e file), endpoint(the route you want to upload to)
+    //this function is used to upload  a resource to an endpoint
+    //the resource type can be a post, page, an image, a theme,
+    //the function is taking in three parameters, which are the resourcetype(the type of what you want to upload), data(the payload i.e file), endpoint(the route you want to upload to)
     function makeUploadRequest(resourceType, data, endpoint) {
         //the headers which is the content type with a boundary
         const headers = {
@@ -241,17 +241,17 @@ module.exports = function GhostAdminAPI(options) {
             body: data,
             headers
         })
-         //return a promise data
-        .then((data) => {
+        //return a promise data
+            .then((data) => {
             //checking if the data resourcetype is an array, if it isnt an array return the data[resourceType]
-            if (!Array.isArray(data[resourceType])) {
-                return data[resourceType];
-            }
+                if (!Array.isArray(data[resourceType])) {
+                    return data[resourceType];
+                }
             
-            if (data[resourceType].length === 1 && !data.meta) {
-                return data[resourceType][0];
-            }
-        });
+                if (data[resourceType].length === 1 && !data.meta) {
+                    return data[resourceType][0];
+                }
+            });
     }
 
     function makeResourceRequest(resourceType, queryParams = {}, body = {}, method = 'GET', urlParams = {}) {
