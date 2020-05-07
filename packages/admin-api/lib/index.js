@@ -21,7 +21,7 @@ module.exports = function GhostAdminAPI(options) {
         // makeRequest (method)
         // using es5 destructured parameters
         // params and headers are optional parameters with an empty object as default value
-        makeRequest({ url, method, data, params = {}, headers = {} }) {
+        makeRequest({url, method, data, params = {}, headers = {}}) {
             // axios: Promise based HTTP client for the browser and node.js
             // Requests can be made by passing the relevant config to axios i.e axios(config)
             return axios({
@@ -47,6 +47,7 @@ module.exports = function GhostAdminAPI(options) {
     const config = Object.assign({}, defaultConfig, options);
 
     // new GhostAdminAPI({host: '...'}) is deprecated
+    
     if (config.host) {
         // eslint-disable-next-line
         console.warn(`${name}: The 'host' parameter is deprecated, please use 'url' instead`);
@@ -54,7 +55,10 @@ module.exports = function GhostAdminAPI(options) {
             config.url = config.host;
         }
     }
-
+    //set formatResponse to true if not added to the option
+    if (config.formatResponse === {} || config.formatResponse === undefined) {
+        config.formatResponse = true;
+    }
     // Ensure a version is supplied
     if (!config.version) {
         throw new Error(`${name} Config Missing: 'version' is required. E.g. ${supportedVersions.join(',')}`);
@@ -291,7 +295,7 @@ module.exports = function GhostAdminAPI(options) {
                 return Promise.reject(new Error('Missing theme name'));
             }
 
-            return makeResourceRequest('themes', {}, {}, 'PUT', { id: `${name}/activate` });
+            return makeResourceRequest('themes', {}, {}, 'PUT', {id: `${name}/activate`});
         }
     };
 
@@ -301,7 +305,7 @@ module.exports = function GhostAdminAPI(options) {
     //the resource type can be a post, page, an image, a theme,
     //the function is taking in three parameters, which are the resourcetype(the type of what you want to upload), data(the payload i.e file), endpoint(the route you want to upload to)
     function makeUploadRequest(resourceType, data, endpoint) {
-        //the headers which is the content type with a boundary
+        //the headers which is the content type with a boundaryUnauthorized
         const headers = {
             'Content-Type': `multipart/form-data; boundary=${data._boundary}`
         };
@@ -314,13 +318,16 @@ module.exports = function GhostAdminAPI(options) {
         })
             //return a promise data
             .then((data) => {
-                //checking if the data resourcetype is an array, if it isnt an array return the data[resourceType]
-                if (!Array.isArray(data[resourceType])) {
-                    return data[resourceType];
-                }
-
-                if (data[resourceType].length === 1 && !data.meta) {
-                    return data[resourceType][0];
+                if (config.formatResponse === true) {
+                    if (!Array.isArray(data[resourceType])) {
+                        return data[resourceType];
+                    }
+    
+                    if (data[resourceType].length === 1 && !data.meta) {
+                        return data[resourceType][0];
+                    }
+                } else {
+                    return data;
                 }
             });
     }
@@ -338,24 +345,27 @@ module.exports = function GhostAdminAPI(options) {
             if (method === 'DELETE') {
                 return data;
             }
-
+            if (config.formatResponse === true) {
             // return data[resourceType] if it is not an array
-            if (!Array.isArray(data[resourceType])) {
-                return data[resourceType];
+                if (!Array.isArray(data[resourceType])) {
+                    return data[resourceType];
+                }
+                // return data[resourceType[0] index of data if data[resourceType] length equals 1 ans data.meta is undefined
+                if (data[resourceType].length === 1 && !data.meta) {
+                    return data[resourceType][0];
+                }
+                //copy the values of all of the enumerable own properties from data.meta as meta data[resourceType]. Returns data[resourceType]
+                return Object.assign(data[resourceType], {meta: data.meta});
+            } else {
+                return Object.assign(data, {meta: data.meta});
             }
-            // return data[resourceType[0] index of data if data[resourceType] length equals 1 ans data.meta is undefined
-            if (data[resourceType].length === 1 && !data.meta) {
-                return data[resourceType][0];
-            }
-            //copy the values of all of the enumerable own properties from data.meta as meta data[resourceType]. Returns data[resourceType]
-            return Object.assign(data[resourceType], { meta: data.meta });
         });
     }
 
     // function endpointFor: returns an endpoint for api request
-    function endpointFor(resource, { id, slug, email } = {}) {
+    function endpointFor(resource, {id, slug, email} = {}) {
         // destructure values from config
-        const { ghostPath, version } = config;
+        const {ghostPath, version} = config;
         // default endpoint
         let endpoint = `/${ghostPath}/api/${version}/admin/${resource}/`;
 
@@ -373,8 +383,8 @@ module.exports = function GhostAdminAPI(options) {
         return endpoint;
     }
 
-    function makeApiRequest({ endpoint, method, body, queryParams = {}, headers = {} }) {
-        const { url: apiUrl, key, version, makeRequest } = config;
+    function makeApiRequest({endpoint, method, body, queryParams = {}, headers = {}}) {
+        const {url: apiUrl, key, version, makeRequest} = config;
         const url = `${apiUrl}${endpoint}`;
 
         headers = Object.assign({}, headers, {
