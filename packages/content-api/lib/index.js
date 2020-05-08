@@ -3,6 +3,7 @@ import axios from 'axios';
 const supportedVersions = ['v2', 'v3', 'canary'];
 const name = '@tryghost/content-api';
 
+
 export default function GhostContentAPI({url, host, ghostPath = 'ghost', version, key, formatResponse = true}) {
     // host parameter is deprecated
     if (host) {
@@ -14,7 +15,7 @@ export default function GhostContentAPI({url, host, ghostPath = 'ghost', version
     }
 
     if (this instanceof GhostContentAPI) {
-        return GhostContentAPI({url, version, key});
+        return GhostContentAPI({ url, version, key });
     }
 
     if (!version) {
@@ -77,7 +78,7 @@ export default function GhostContentAPI({url, host, ghostPath = 'ghost', version
         } : undefined;
 
         return axios.get(`${url}/${ghostPath}/api/${version}/content/${resourceType}/${id ? id + '/' : ''}`, {
-            params: Object.assign({key}, params),
+            params: Object.assign({ key }, params),
             paramsSerializer: (params) => {
                 return Object.keys(params).reduce((parts, key) => {
                     const val = encodeURIComponent([].concat(params[key]).join(','));
@@ -87,16 +88,16 @@ export default function GhostContentAPI({url, host, ghostPath = 'ghost', version
             headers
         }).then((res) => {
             if (formatResponse) {
-                if (!Array.isArray(res.data[resourceType])) {
-                    return res.data[resourceType];
-                }
-                if (res.data[resourceType].length === 1 && !res.data.meta) {
-                    return res.data[resourceType][0];
-                }
-                return Object.assign(res.data[resourceType], {meta: res.data.meta});
-            } else {
-                return res.data;
+                      if (!Array.isArray(res.data[resourceType])) {
+                          return res.data[resourceType];
+                      }
+                      if (res.data[resourceType].length === 1 && !res.data.meta) {
+                          return res.data[resourceType][0];
+                      }
+                      return Object.assign(res.data[resourceType], { meta: res.data.meta });
             }
+            return res;
+
         }).catch((err) => {
             if (err.response && err.response.data && err.response.data.errors) {
                 const props = err.response.data.errors[0];
